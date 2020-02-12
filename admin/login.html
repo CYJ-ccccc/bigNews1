@@ -38,6 +38,76 @@
     </div>
   </div>
 
+
+  <!-- Modal 登录弹出bootstrap模态框-->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+          <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
+<script src="./js/apiHttp.js"></script>
+<script>
+  // 点击登录获取用户名和登录密码
+  $('.input_sub').on('click', function (evnet) {
+    // 阻止表单默认提交行为
+    evnet.preventDefault();
+    // 获取用户输入的用户名和密码
+    let userName = $('.input_txt').val().trim();
+    let userPassword = $('.input_pass').val().trim();
+    // 做非空判断
+    if (userName == '' || userPassword == "") {
+      $('.modal-body').text("用户名和密码不能为空哦！")
+      $('#myModal').modal();
+    }
+    // console.log(userName);
+    // console.log(userPassword);
+
+    // 发送ajax请求
+    $.ajax({
+      type: 'post',
+      url: BigNew.user_login,
+      data: {
+        username: userName,
+        password: userPassword
+      },
+      success: function (dataBack) {
+        // console.log(dataBack);
+
+        if (dataBack.code == 200) {
+          // 保存返回回来的token值在本地
+          localStorage.setItem('token', dataBack.token);
+          $('.modal-body').text(dataBack.msg)
+          $('#myModal').modal();
+          $('#myModal').on('hidden.bs.modal', function () {
+            window.location.href = './index.html'
+          })
+        } else {
+          $('.modal-body').text(dataBack.msg)
+          $('#myModal').modal();
+          $('#myModal').on('hidden.bs.modal', function () {
+            $('.input_txt').val('');
+            $('.input_pass').val('');
+          })
+        }
+      }
+    })
+  })
+
+  
+</script>
 
 </html>

@@ -55,4 +55,29 @@
         </div>
     </div>
 </body>
+<script src="./js/apiHttp.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            type: 'get',
+            url: BigNew.user_info,
+            success: function (dataBack) {
+                $('.user_info img').attr('src', dataBack.data.userPic);
+                $('.user_info sapn').text('欢迎' + '   ' + '   ' + dataBack.data.nickname);
+                $('.user_center_link img').attr('src', dataBack.data.userPic);
+            }
+        })
+    })
+    // 点击删除事件
+    $('.logout').on('click', function (event) {
+        // 阻止a标签默认跳转
+        event.preventDefault();
+        if (confirm('是否要退出？')) {
+            // 清空保存在本地的token
+            localStorage.removeItem('token');
+            window.location.href='./login.html';
+        }
+    })
+</script>
+
 </html>
